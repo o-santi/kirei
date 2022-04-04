@@ -1,0 +1,13 @@
+type Reply<A:Type> {
+  error(msg: String),
+  value(val: A),
+}
+
+Reply.bind<A: Type, B: Type>(g: Reply<A>, f: A -> Reply<B>): Reply<B>
+  case g {
+    error: Reply.error<B>(g.msg)
+    value: f(g.val)
+  }
+
+Reply.monad: Monad<Reply>
+  Monad.new<Reply>(Reply.bind, Reply.value)
