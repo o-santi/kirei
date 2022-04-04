@@ -4,10 +4,11 @@ uma pequena linguagem criada com o singelo propósito de aprender como são impl
 
 é dividida em 3 fases: sem tipos, tipos simples e com tipos dependentes. cada uma é implementada na sua própria file (atualmente temos apenas a versão sem tipos).
 
-instale [Kind](https://github.com/Kindelia/Kind) e depos faça:
+para rodar, instale [Kind](https://github.com/Kindelia/Kind) e depos faça:
 ```bash
 kind untyped.kind --run
-``` 
+```
+
 
 ## sintaxe
 a linguagem aceita apenas 3 tipos de expressões:
