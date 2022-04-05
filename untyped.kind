@@ -226,12 +226,29 @@ run_or_error(code: String): IO<Unit>
 
 untyped: IO<Unit>
   let code = "
-  let succ = #pred #f #x f (pred f x) in
+  let succ = #p #f #x f (p f x) in
   let zero = #f #x x in
+  let pred = #n #f #x (n (λg (λh (h (g f))))) (λu x)(λu u) in
 
-  let sum  = #k #j #f #x (k f) (j f x) in
-  let mul  = #k #j #f #x (k (j f)) x in
- 
-  succ zero
+  let one  = succ zero in
+  let two  = succ (succ zero) in
+  let three = succ two in
+
+  let sum = #k #j #f #x (k f) (j f x) in
+  let mul = #k #j #f #x (k (j f)) x in
+  
+  let true  = #t #f t in
+  let false = #t #f f in
+
+  let cond = #p #a #b p a b in
+
+  let is_zero = #n n (#x false) true in
+
+  let F = #p p (#a #b #g g (#f #x f (a f x)) (#f a (b f))) in
+
+  let fact = #n n F (#g g one one) (#a #b b) in
+
+  fact (succ (mul two three))
+
   "
   run_or_error(code)
