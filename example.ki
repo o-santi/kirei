@@ -1,0 +1,43 @@
+let identity = #x x in
+
+let fix = #f (#x f (#v x x v)) (#x f (#v x x v)) in
+
+let zero =    #Z #S     Z     in
+let succ = #n #Z #S   (S n)   in
+  
+let one  = succ zero in
+let two  = succ one in
+let three = succ two in
+let four = succ three in
+
+let case_nat =
+  #n #case_zero #case_succ
+   n  case_zero  case_succ in
+
+let pred = #k case_nat k
+    zero
+    (#pred_k pred_k) in
+
+let sum_rec = #rec #n #m
+    case_nat n
+      m
+      (#pred
+        succ (rec pred m)) in
+  
+let sum = fix sum_rec in
+
+let mul_rec = #rec #n #m
+    case_nat n
+      zero
+      (#pred
+        sum m (rec pred m)) in
+
+let mul = fix mul_rec in
+
+let sum_zero_left_is_identity = sum zero in
+
+let predsucc = #k pred (succ k) in
+
+let sumzero = #k sum zero k in
+
+sum zero

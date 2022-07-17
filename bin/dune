@@ -1,0 +1,4 @@
+(executable
+ (public_name kirei)
+ (name main)
+ (libraries kirei stdio opal))
