@@ -1,3 +1,4 @@
 (library
  (name kirei)
- (libraries opal base))
+ (preprocess (pps ppx_jane))
+ (libraries opal base stdio))

@@ -20,14 +20,18 @@ type value =
   | VApp of value * value
   | VLam of string * (value -> value reply)
 
-let rec freshen name list =
-  match (List.mem list name ~equal:String.equal) with
-  | true -> freshen (name ^ "-") list
-  | false -> name
+(* this is stupid *)
+(* i should write a proper environment-associated gen-sym *)
+let make_fresh =
+  let id_counter = ref (-1) in
+  let gen_id = fun () -> Int.incr id_counter; !id_counter in
+  let freshen name = name ^ "_" ^ (Int.to_string (gen_id ())) in
+  freshen
+
 
 let lookup env sym =
   match Map.find env sym with
-  | None -> Error ("A variavel " ^ sym ^ " não foi definida.")
+  | None -> Error ("Variable " ^ sym ^ " is not defined.")
   | Some v -> Value v
 
 let rec eval env expr =
@@ -50,22 +54,18 @@ let rec eval env expr =
      let new_env = Map.set env ~key:name ~data:vall in
      eval new_env body
 
-and quote used repv =
+and quote gen_sym repv =
   match repv with
   | Error msg -> Error msg
   | Value (VVar name) -> Value (EVar name)
   | Value (VApp (f, args)) ->
-     let+ quote_f    = quote used (Value f) in
-     let+ quote_args = quote used (Value args) in
+     let+ quote_f    = quote gen_sym (Value f) in
+     let+ quote_args = quote gen_sym (Value args) in
      Value (EApp (quote_f, quote_args))
   | Value (VLam (name, body)) ->
-     let new_sym = freshen name used in
-     let+ quote_lam = quote (name :: used) (body (VVar new_sym)) in
-     Value (ELam (new_sym, quote_lam))
-
-let normalize env expr =
-  let v = eval env expr in
-  quote (Map.keys env) v
+     let new_name = gen_sym name in
+     let+ quote_lam = quote gen_sym (body (VVar new_name)) in
+     Value (ELam (new_name, quote_lam))
 
 let rec show term =
   match term with
@@ -73,6 +73,11 @@ let rec show term =
   | EApp (func, arg) -> "(" ^ (show func) ^ " " ^ (show arg) ^ ")"
   | ELam (var, body) -> "(λ" ^ var ^ " " ^ (show body) ^ ")"
   | ELet (var, exp, body) -> "let " ^ var ^ " = " ^ (show exp) ^ " in\n" ^ (show body)
+
+let normalize env expr =
+  let v = eval env expr in
+  let gen_sym = make_fresh in
+  quote gen_sym v
 
 let run code =
   let norm = normalize (Map.empty (module String)) code in

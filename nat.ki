@@ -1,0 +1,20 @@
+Nat : * = %self(P: @(: Nat) *)
+  @(z: (P zero))
+  @(s: @(pred: Nat) (P (succ pred)))
+  (P self);
+
+zero : Nat = #P #Z #S Z;
+succ : @(n: Nat) Nat =
+ #n #P #Z #S (S n);
+
+three : Nat = (succ two);
+
+add : @(n: Nat) @(m: Nat) Nat =
+  #n #m
+  (((n (#self Nat)) m)
+    (#pred
+      (succ ((add pred) m))));
+
+one : Nat = (succ zero);
+two : Nat = (succ one);
+main : Nat = ((add one) (succ zero));

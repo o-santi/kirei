@@ -1,4 +1,5 @@
 (executable
  (public_name kirei)
  (name main)
- (libraries kirei stdio opal))
+ (preprocess (pps ppx_jane))
+ (libraries kirei opal stdio core))

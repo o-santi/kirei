@@ -40,4 +40,4 @@ let predsucc = #k pred (succ k) in
 
 let sumzero = #k sum zero k in
 
-sum zero
+mul two (mul two three)
